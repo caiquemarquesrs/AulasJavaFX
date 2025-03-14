@@ -1,63 +1,56 @@
 package edu.pucgoias.aulasjavafx;
 
 import javafx.application.Application;
-import javafx.geometry.Orientation;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class HelloApplication extends Application {
+public class HelloApplication extends Application
+        implements EventHandler<ActionEvent> {
     public static void main(String[] args) {
         launch();
     }
 
     @Override
     public void start(Stage palco) throws Exception {
-        VBox raiz = new VBox(10);
+        VBox raiz = new VBox(20);
         raiz.setAlignment(Pos.CENTER);
+        raiz.setTranslateY(5);
 
-        Label rotuloDem = new Label("Deixe seu comentário");
-        rotuloDem.setTooltip(new Tooltip(
-                "Formulário para entrada de comentários"
-        ));
+        Button btnUm = new Button("Clique em mim! (Tratador externo)");
+        Button btnDois = new Button("Clique em mim! (Expressão Lambda)");
+        Button btnTres = new Button("Clique em mim! (Própria classe)");
 
-        TextField campoTexto = new TextField("Informe seu nome");
-        campoTexto.setTooltip(new Tooltip(
-                "Este campo suporta apenas uma linha"
-        ));
+        // usamos a classe TratadorEvento para cuidar dos eventos
+        btnUm.setOnAction(new TratadorEvento());
+        // Criando uma instância de uma classe anônima para tratar evento
+        btnDois.setOnAction(new EventHandler<ActionEvent>() {
 
-        TextArea areaTexto = new TextArea("Entre com seu comentário\n" +
-                "Este campo suporta várias linhas");
-        areaTexto.setTooltip(new Tooltip(
-                "Campo de texto para entrada de múltiplas linhas"
-        ));
-
-        Separator separadorHor = new Separator();
-        Separator separadorVer = new Separator(Orientation.VERTICAL);
-        Slider deslizante = new Slider();
-        deslizante.setShowTickLabels(true);
-        deslizante.setShowTickMarks(true);
-        Label valoresSlide = new Label();
-
-        deslizante.setOnDragDetected(evento -> {
-            System.out.println("Arrastando");
-            valoresSlide.setText("Arrastando");
-            deslizante.startFullDrag();
+            public void handle(ActionEvent evento) {
+                System.out.println("Evento tratado por uma classe anônima!");
+            }
         });
+        // o botão 3 usa essa própria classe para tratar seus eventos
+        btnTres.setOnAction(this);
 
-        deslizante.
-                setTooltip(new Tooltip(
-                        "O controle deslizante tem um valor numérico de acordo com sua posição"
-                ));
+        raiz.getChildren().addAll(btnUm, btnDois, btnTres);
 
-        raiz.getChildren().addAll(rotuloDem, campoTexto, areaTexto,
-                separadorVer, separadorHor, deslizante, valoresSlide);
-
-        Scene cena = new Scene(raiz, 300, 400);
-        palco.setTitle("Controles Básicos 1");
+        Scene cena = new Scene(raiz, 300, 200);
+        palco.setTitle("Tratando eventos");
         palco.setScene(cena);
         palco.show();
+    }
+
+    /*
+     * Como a própria classe TratamentoEventoComBotao implementa
+     * a interface EventHandler, ela mesma pode responder a eventos do botão
+     *
+     */
+    public void handle(ActionEvent evento) {
+        System.out.println("Evento tratado na próxima classe!");
     }
 }
