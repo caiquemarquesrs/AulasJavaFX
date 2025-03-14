@@ -1,11 +1,11 @@
 package edu.pucgoias.aulasjavafx;
 
 import javafx.application.Application;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class HelloApplication extends Application {
@@ -14,33 +14,50 @@ public class HelloApplication extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
-        AnchorPane pane = new AnchorPane();
-        pane.setPrefSize(400, 300);
+    public void start(Stage palco) throws Exception {
+        VBox raiz = new VBox(10);
+        raiz.setAlignment(Pos.CENTER);
 
-        TextField txtName = new TextField();
-        txtName.setPromptText("Adicione o nome");
-        pane.getChildren().add(txtName);
+        Label rotuloDem = new Label("Deixe seu comentário");
+        rotuloDem.setTooltip(new Tooltip(
+                "Formulário para entrada de comentários"
+        ));
 
-        PasswordField txtPass = new PasswordField();
-        txtPass.setPromptText("Adicione a senha");
-        pane.getChildren().add(txtPass);
+        TextField campoTexto = new TextField("Informe seu nome");
+        campoTexto.setTooltip(new Tooltip(
+                "Este campo suporta apenas uma linha"
+        ));
 
-        Button btnEnter = new Button("Entrar");
-        pane.getChildren().add(btnEnter);
+        TextArea areaTexto = new TextArea("Entre com seu comentário\n" +
+                "Este campo suporta várias linhas");
+        areaTexto.setTooltip(new Tooltip(
+                "Campo de texto para entrada de múltiplas linhas"
+        ));
 
-        Scene scene = new Scene(pane, 400, 300);
-        stage.setTitle("Formulário 01");
-        stage.setScene(scene);
-        stage.show();
+        Separator separadorHor = new Separator();
+        Separator separadorVer = new Separator(Orientation.VERTICAL);
+        Slider deslizante = new Slider();
+        deslizante.setShowTickLabels(true);
+        deslizante.setShowTickMarks(true);
+        Label valoresSlide = new Label();
 
-        txtName.setLayoutX((pane.getWidth() - txtName.getWidth()) / 2);
-        txtName.setLayoutY(50);
+        deslizante.setOnDragDetected(evento -> {
+            System.out.println("Arrastando");
+            valoresSlide.setText("Arrastando");
+            deslizante.startFullDrag();
+        });
 
-        txtPass.setLayoutX((pane.getWidth() - txtPass.getWidth()) / 2);
-        txtPass.setLayoutY(100);
+        deslizante.
+                setTooltip(new Tooltip(
+                        "O controle deslizante tem um valor numérico de acordo com sua posição"
+                ));
 
-        btnEnter.setLayoutX((pane.getWidth() - btnEnter.getWidth()) / 2);
-        btnEnter.setLayoutY(150);
+        raiz.getChildren().addAll(rotuloDem, campoTexto, areaTexto,
+                separadorVer, separadorHor, deslizante, valoresSlide);
+
+        Scene cena = new Scene(raiz, 300, 400);
+        palco.setTitle("Controles Básicos 1");
+        palco.setScene(cena);
+        palco.show();
     }
 }
